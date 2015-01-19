@@ -30,7 +30,7 @@ require Exporter;
 
 @ISA     = qw( Exporter );
 @EXPORT  = qw( julian_easter gregorian_easter orthodox_easter easter );
-$VERSION = '1.21';
+$VERSION = '1.22';
 
 =pod
 
@@ -71,7 +71,7 @@ sub gregorian_easter {
     my ( $G, $C, $H, $I, $J, $L, $month, $day, );
     $G = $year % 19;
     $C = int( $year / 100 );
-    $H = ( $C - int( $C / 4 ) - int( ( 8 * $C ) / 25 ) + 19 * $G + 15 ) % 30;
+    $H = ( $C - int( $C / 4 ) - int( ( 8 * $C + 13 ) / 25 ) + 19 * $G + 15 ) % 30;
     $I = $H - int( $H / 28 ) *
       ( 1 - int( $H / 28 ) * int( 29 / ( $H + 1 ) ) * int( ( 21 - $G ) / 11 ) );
     $J     = ( $year + int( $year / 4 ) + $I + 2 - $C + int( $C / 4 ) ) % 7;
@@ -106,39 +106,46 @@ Apostolos Syropoulos
 
 =cut
 
+
 sub orthodox_easter {
-
     my $year   = shift;
-    my $epakti = ( ( ( $year - 2 ) % 19 ) * 11 ) % 30;
-    my $month;
-    if ( $epakti > 23 ) { $month = 4; }
-    else { $month = 3; }
-    my $fullmoon = 44 - $epakti + 13;
 
-    if ( ( $month == 4 ) && ( $fullmoon > 30 ) ) {
-        $month++;
+    die "Invalid year for Gregorian calendar" if ($year < 1583);
+
+    # Find the date of the Paschal Full Moon (based on Alexandrian computus)
+    my $epact = ( ( $year % 19 ) * 11 ) % 30;
+    my $fullmoon = 5 - $epact;
+    $fullmoon += 30 if $fullmoon < -10;
+
+    # Convert from Julian to Gregorian calender
+    $fullmoon += int($year / 100) - int($year / 400) - 2;
+
+    my $month = 4;
+    if ( $fullmoon > 30 ) {
+        $month = 5;
         $fullmoon -= 30;
-      } elsif ( ( $month == 3 ) && ( $fullmoon > 31 ) )
-    {
-        $month++;
-        $fullmoon -= 31;
+    } elsif ( $fullmoon <= 0 ) {
+        $month = 3;
+        $fullmoon += 31;
     }
+
+    # Find the next Sunday
     my $fullmoonday = dow( $fullmoon, $month, $year );
     my $easter = $fullmoon + ( 7 - $fullmoonday );
 
-    if ( ( $month == 3 ) && ( $easter > 31 ) ) {
+    if ( $month == 3 && $easter > 31 ) {
         $month++;
         $easter -= 31;
-      } elsif ( ( $month == 4 ) && ( $easter > 30 ) )
-    {
+    } elsif ( $month == 4 && $easter > 30 ) {
         $month++;
         $easter -= 30;
     }
     return ( $month, $easter );
 }
+
 #}}}
 
-sub dow { ( localtime( timelocal( 0, 0, 0, $_[0], $_[1] - 1, $_[2] ) ) )[6] }
+sub dow { ( localtime( timelocal( 0, 0, 0, $_[0], $_[1] - 1, $_[2] ) ) )[6] } 
 
 1;
 
