@@ -9,7 +9,7 @@ use strict;
 BEGIN {
 	use Exporter ();
 	use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-	$VERSION     = (qw'$Revision: 1.11 $')[1];
+	$VERSION     = (qw'$Revision: 1.12 $')[1];
 	@ISA         = qw (Exporter);
 	@EXPORT      = qw (passover roshhashanah);
 	@EXPORT_OK   = qw ();
@@ -109,7 +109,7 @@ sub roshhashanah{
     my $dow = dayofweek( $day, 9, $year );
     if ( $dow == 0 || $dow == 3 || $dow == 5 ) {
         $day ++;
-    } elsif ( ( $dow == 1 ) && ( ($day - (int($day))) >= 1367/2160 )
+    } elsif ( ( $dow == 1 ) && ( ($day - (int($day))) >= 23269/25920 )
         && ( ( (12 * $g )%19 ) > 11 ) ) {
         $day ++;
     } elsif ( ( $dow == 2 ) && ( $day - (int($day)) >= 1367/2160 )
