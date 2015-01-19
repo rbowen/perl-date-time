@@ -9,7 +9,7 @@ use strict;
 BEGIN {
 	use Exporter ();
 	use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-	$VERSION     = (qw'$Revision: 1.10 $')[1];
+	$VERSION     = (qw'$Revision: 1.11 $')[1];
 	@ISA         = qw (Exporter);
 	@EXPORT      = qw (passover roshhashanah);
 	@EXPORT_OK   = qw ();
@@ -120,7 +120,7 @@ sub roshhashanah{
     $day = int($day);
     my $month = 9;
     if ( $day > 30 ) {
-        $day -= 29;
+        $day -= 30;
         $month++;
     }
 
