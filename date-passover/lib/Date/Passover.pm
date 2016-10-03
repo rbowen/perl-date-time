@@ -9,7 +9,7 @@ use strict;
 BEGIN {
 	use Exporter ();
 	use vars qw ($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-	$VERSION     = (qw'$Revision: 1.12 $')[1];
+	$VERSION     = '1.13';
 	@ISA         = qw (Exporter);
 	@EXPORT      = qw (passover roshhashanah);
 	@EXPORT_OK   = qw ();
@@ -63,7 +63,7 @@ LICENSE file included with this module.
  perl(1)
  Date::ICal
  Date::Easter
- Reefknot ( http://reefknot.org/ )
+ Date::DayOfWeek
 
 =cut
 
